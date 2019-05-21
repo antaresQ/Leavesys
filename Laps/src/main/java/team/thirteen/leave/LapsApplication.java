@@ -5,12 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LeavesysApplication {
+public class LapsApplication {
 
-	Logger Log = LoggerFactory.getLogger(LeavesysApplication.class);
+	Logger Log = LoggerFactory.getLogger(LapsApplication.class);
 	
 	public static void main(String[] args) {
-		SpringApplication.run(LeavesysApplication.class, args);
+		SpringApplication.run(LapsApplication.class, args);
 	}
 
 }

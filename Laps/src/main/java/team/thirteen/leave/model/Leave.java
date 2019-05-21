@@ -9,6 +9,9 @@ public class Leave {
 	private LocalDateTime endDate;
 	private String category;
 	private String reason;
+	private int staffId;
+	private String contactDetails;
+	private String status;
 	private String comment;
 	
 	public Leave() {
@@ -16,13 +19,18 @@ public class Leave {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Leave(int leaveId, LocalDateTime startDate, LocalDateTime endDate, String category, String reason) {
+
+	public Leave(int leaveId, LocalDateTime startDate, LocalDateTime endDate, String category, String reason,
+			int staffId, String contactDetails) {
 		super();
 		LeaveId = leaveId;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.category = category;
 		this.reason = reason;
+		this.staffId = staffId;
+		this.contactDetails = contactDetails;
+		this.status = "Pending";
 	}
 
 	public int getLeaveId() {
