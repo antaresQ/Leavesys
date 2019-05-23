@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import team.thirteen.leave.model.Employee;
-import team.thirteen.leave.model.Leave;
+import team.thirteen.leave.model.LeaveDetail;
 import team.thirteen.leave.repository.*;
 
 @Controller
@@ -31,20 +31,20 @@ public class ReviewLeaveController {
 		this.empRepo = empRepository;
 	}
 	
-	@RequestMapping(path="/review/subordinateleave", method = RequestMethod.GET)
-	public String ViewApplications(int managerId, Model model) {
+	@RequestMapping(path="/review/subordinateleave/{id}", method = RequestMethod.GET)
+	public String ViewApplications(Integer managerId, Model model) {
 
 		List<Employee> allEmployees = empRepo.findAll();
 		ArrayList<Employee> subordinates = new ArrayList<Employee>();
-		List<Leave> allLeave = lvRepo.findAll();
-		ArrayList<Leave> subLeave = new ArrayList<>();
+		List<LeaveDetail> allLeave = lvRepo.findAll();
+		ArrayList<LeaveDetail> subLeave = new ArrayList<>();
 		
 		for (Employee e: allEmployees) {
 			if (e.getManagerId() == managerId) {
 				
 				subordinates.add(e);
 				
-				for (Leave l: allLeave) {
+				for (LeaveDetail l: allLeave) {
 					
 					if (l.getemployee() == e) {
 						subLeave.add(l);
@@ -58,6 +58,11 @@ public class ReviewLeaveController {
 		model.addAttribute("subleave", subLeave);
 		
 		
+		return "viewLeaveApplications";
+	}
+	
+	@RequestMapping(path="/testpage", method = RequestMethod.GET)
+	public String test() {
 		return "viewLeaveApplications";
 	}
 }

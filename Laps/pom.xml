@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>team.thirteen.leave</groupId>
-	<artifactId>Laps</artifactId>
+	<artifactId>LapsApplication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Leavesys</name>
+	<name>LapsApplication</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
