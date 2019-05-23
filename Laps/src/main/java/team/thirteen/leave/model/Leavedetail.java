@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 
 @Entity
-public class LeaveDetail {
+public class Leavedetail {
 	
 	@Id
 	private int LeaveId;
@@ -21,13 +21,13 @@ public class LeaveDetail {
     @JoinColumn(name="staffId")
     private Employee employee;
 	
-	public LeaveDetail() {
+	public Leavedetail() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public LeaveDetail(int leaveId, LocalDateTime startDate, LocalDateTime endDate, String category, String reason,
+	public Leavedetail(int leaveId, LocalDateTime startDate, LocalDateTime endDate, String category, String reason,
 			Employee employee, String contactDetails) {
 		super();
 		LeaveId = leaveId;

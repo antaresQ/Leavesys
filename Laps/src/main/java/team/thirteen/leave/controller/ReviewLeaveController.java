@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import team.thirteen.leave.model.Employee;
-import team.thirteen.leave.model.LeaveDetail;
+import team.thirteen.leave.model.Leavedetail;
 import team.thirteen.leave.repository.*;
 
 @Controller
@@ -31,20 +33,22 @@ public class ReviewLeaveController {
 		this.empRepo = empRepository;
 	}
 	
-	@RequestMapping(path="/review/subordinateleave/{id}", method = RequestMethod.GET)
-	public String ViewApplications(Integer managerId, Model model) {
+	@RequestMapping(path="/reviewleave", params = "managerId" ,method = RequestMethod.GET)
+	@ResponseBody
+	public String ViewApplications(
+			@RequestParam("managerId") int managerId, Model model) {
 
 		List<Employee> allEmployees = empRepo.findAll();
 		ArrayList<Employee> subordinates = new ArrayList<Employee>();
-		List<LeaveDetail> allLeave = lvRepo.findAll();
-		ArrayList<LeaveDetail> subLeave = new ArrayList<>();
+		List<Leavedetail> allLeave = lvRepo.findAll();
+		ArrayList<Leavedetail> subLeave = new ArrayList<>();
 		
 		for (Employee e: allEmployees) {
 			if (e.getManagerId() == managerId) {
 				
 				subordinates.add(e);
 				
-				for (LeaveDetail l: allLeave) {
+				for (Leavedetail l: allLeave) {
 					
 					if (l.getemployee() == e) {
 						subLeave.add(l);

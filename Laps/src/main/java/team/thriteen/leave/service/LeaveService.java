@@ -25,18 +25,18 @@ public class LeaveService {
 		return em.find(Employee.class, managerId);
 	}
 	
-	public ArrayList<LeaveDetail> getEmpLeaveRecById(int staffId) {
+	public ArrayList<Leavedetail> getEmpLeaveRecById(int staffId) {
 		String queryName = "Leave.findByStaffId";
 		Query qry = em.createNamedQuery(queryName);
 		qry.setParameter("staffId", staffId);
-		ArrayList<LeaveDetail> leaveRecord = (ArrayList<LeaveDetail>) qry.getResultList();
+		ArrayList<Leavedetail> leaveRecord = (ArrayList<Leavedetail>) qry.getResultList();
 		return leaveRecord;
 	}
 
-	public ArrayList<LeaveDetail> showAllSubordinateLeave(int managerId) {
+	public ArrayList<Leavedetail> showAllSubordinateLeave(int managerId) {
 		em.getTransaction().begin();
 		List<Employee> subs = (List<Employee>) getSubordinates(managerId);
-		ArrayList<LeaveDetail> subLeaveRecord = new ArrayList<LeaveDetail>();
+		ArrayList<Leavedetail> subLeaveRecord = new ArrayList<Leavedetail>();
 		
 		for (Employee e : subs) {
 				

@@ -4,7 +4,8 @@ import javax.persistence.*;
 
 import team.thirteen.leave.model.Role;
 
-@Entity
+@Entity(name="employee")
+@Table(name="employee")
 public class Employee {
 	
 	@Id

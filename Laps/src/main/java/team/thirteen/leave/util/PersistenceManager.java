@@ -12,7 +12,7 @@ public enum PersistenceManager {
 	private EntityManagerFactory emFactory;
 
 	private PersistenceManager() {
-		emFactory = Persistence.createEntityManagerFactory("Laps");
+		emFactory = Persistence.createEntityManagerFactory("leavesys");
 	}
 	
 	public EntityManager getEntityManager() {
