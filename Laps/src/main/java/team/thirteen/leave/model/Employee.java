@@ -2,6 +2,8 @@ package team.thirteen.leave.model;
 
 import javax.persistence.*;
 
+import team.thirteen.leave.model.Role;
+
 @Entity
 public class Employee {
 	
@@ -11,15 +13,17 @@ public class Employee {
 	private String userId;
 	private String password;
 	private int managerId;
-	private String Role;
 	private String email;
+	@ManyToOne
+	@JoinColumn(name = "roleId")
+	private Role role;
 	
 	public Employee() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Employee(int staffId, String name, String userId, String password, int managerId, String role,
+	public Employee(int staffId, String name, String userId, String password, int managerId, Role role,
 			String email) {
 		super();
 		this.staffId = staffId;
@@ -27,7 +31,7 @@ public class Employee {
 		this.userId = userId;
 		this.password = password;
 		this.managerId = managerId;
-		Role = role;
+		this.role = role;
 		this.email = email;
 	}
 
@@ -61,11 +65,11 @@ public class Employee {
 	public void setManagerId(int managerId) {
 		this.managerId = managerId;
 	}
-	public String getRole() {
-		return Role;
+	public Role getRole() {
+		return this.role;
 	}
-	public void setRole(String role) {
-		Role = role;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	public String getEmail() {
 		return email;
@@ -77,7 +81,7 @@ public class Employee {
 	@Override
 	public String toString() {
 		return "Employee [staffId=" + staffId + ", name=" + name + ", userId=" + userId + ", password=" + password
-				+ ", managerId=" + managerId + ", Role=" + Role + ", email=" + email + "]";
+				+ ", managerId=" + managerId + ", Role=" + role + ", email=" + email + "]";
 	}
 	
 	
