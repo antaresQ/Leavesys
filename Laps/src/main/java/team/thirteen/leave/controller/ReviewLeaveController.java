@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import team.thirteen.leave.model.Employee;
 import team.thirteen.leave.model.Leavedetail;
+import team.thirteen.leave.model.Role;
 import team.thirteen.leave.repository.*;
 import team.thirteen.leave.service.EmployeeService;
 import team.thirteen.leave.service.LeaveService;
@@ -35,7 +36,7 @@ public class ReviewLeaveController {
 		this.empRepo = empRepository;
 	}
 	
-	@RequestMapping(path="/reviewleave", params = "managerId" ,method = RequestMethod.GET)
+	@RequestMapping(path="/viewsubleave", params = "managerId" ,method = RequestMethod.GET)
 	public String ViewApplications(
 			@RequestParam("managerId") int managerId, Model model) {
 		
@@ -50,17 +51,41 @@ public class ReviewLeaveController {
 		List<Leavedetail> allLeave = lvRepo.findAll();
 		ArrayList<Leavedetail> subLeave = new ArrayList<>();
 		
+
 		for (Employee e: allEmployees) {
+			
 			if (e.getManagerId() == managerId) {
 				
-				subordinates.add(e);
+				int aConsumed = 0;
+				int mConsumed = 0;
 				
 				for (Leavedetail l: allLeave) {
 					
-					if (l.getemployee() == e) {
-						subLeave.add(l);
+						if (l.getemployee() == e) {
+							subLeave.add(l);
+
+							if(l.getStatus().equals("Approved")) {
+								
+								if (l.getCategory().equals("Annual Leave")) {
+									aConsumed = aConsumed + 1;
+								}
+								else if(l.getCategory().equals("Medical Leave")) {
+									mConsumed = mConsumed +1;
+								}
+								
+							}
+								
+						}
 					}
-				}
+				
+				int annualL = e.getRole().getAnnualLeave();
+				int medicalL = e.getRole().getMedicalLeave();
+				annualL = annualL - aConsumed;
+				medicalL = medicalL - mConsumed;
+				
+				e.getRole().setAnnualLeave(annualL);
+				e.getRole().setMedicalLeave(medicalL);
+				subordinates.add(e);
 			}
 		}
 		
@@ -70,6 +95,7 @@ public class ReviewLeaveController {
 		
 		return "viewLeaveApplications";
 	}
+	
 	
 	@RequestMapping(path="/testpage", method = RequestMethod.GET)
 	public String test() {

@@ -31,19 +31,21 @@
 					<td>Comment</td>
 				</tr>
 					<tr th:if="${subordinate.staffId} == ${leave.employee.staffId}" th:each="leave: ${subleave}">
-							<td th:text="${leave.LeaveId}"></td>
-							<td th:text="${leave.startDate}"></td>
-							<td th:text="${leave.endDate}"></td>
-							<td th:text="${leave.category}"></td>
-							<td th:text="${leave.reason}"></td>
-							<td th:text="${leave.contactDetails}"></td>
-							<td th:text="${leave.status}"></td>
-							<td th:text="${leave.comment}"></td>
+							<td th:text="${leave.LeaveId}">Nil</td>
+							<td th:text="${leave.startDate}">Nil</td>
+							<td th:text="${leave.endDate}">Nil</td>
+							<td th:text="${leave.category}">Nil</td>
+							<td th:text="${leave.reason}">Nil</td>
+							<td th:text="${leave.contactDetails}">Nil</td>
+							<td th:text="${leave.status}">Nil</td>
+							<td th:text="${leave.comment}">Nil</td>
 					</tr>
 			</table>
 		</tr>
 		<p> </p><p> </p><p> </p>
 	</table>
+	
+	<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
 
 <style>
 table {
