@@ -5,6 +5,7 @@
 </head>
 <body>
 
+<form th:object="${model}" th:action="@{/reviewleave}" method="post">
 	<table th:each="subordinate : ${subordinates}">
 		<tr>
 			<td>Staff ID</td>
@@ -15,8 +16,8 @@
 		<tr>
 			<td th:text="${subordinate.staffId}"></td>
 			<td th:text="${subordinate.name}"></td>
-			<td th:text="*{subordinate.role.annualLeave}"></td>
-			<td th:text="*{subordinate.role.medicalLeave}"></td>
+			<td th:text="${subordinate.role.annualLeave}"></td>
+			<td th:text="${subordinate.role.medicalLeave}"></td>
 		</tr>
 		<tr>
 			<table>
@@ -32,8 +33,8 @@
 				</tr>
 					<tr th:if="${subordinate.staffId} == ${leave.employee.staffId}" th:each="leave: ${subleave}">
 							<td th:text="${leave.LeaveId}">Nil</td>
-							<td th:text="${leave.startDate}">Nil</td>
-							<td th:text="${leave.endDate}">Nil</td>
+							<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Nil</td>
+							<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">Nil</td>
 							<td th:text="${leave.category}">Nil</td>
 							<td th:text="${leave.reason}">Nil</td>
 							<td th:text="${leave.contactDetails}">Nil</td>
@@ -46,7 +47,7 @@
 	</table>
 	
 	<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-
+</form>
 <style>
 table {
   border-spacing: 25px 0px;
