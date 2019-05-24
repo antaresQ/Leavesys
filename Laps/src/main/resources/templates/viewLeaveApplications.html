@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<form th:object="${model}" th:action="@{/reviewleave}" method="post">
+<form th:object="${Leavedetail}" th:action="@{/reviewleave}" method="post">
 	<table th:each="subordinate : ${subordinates}">
 		<tr>
 			<td>Staff ID</td>
@@ -26,20 +26,15 @@
 					<td>Start Date</td>
 					<td>End Date</td>
 					<td>Category</td>
-					<td>Reason</td>
-					<td>Contact Details</td>
 					<td>Status</td>
-					<td>Comment</td>
 				</tr>
 					<tr th:if="${subordinate.staffId} == ${leave.employee.staffId}" th:each="leave: ${subleave}">
 							<td th:text="${leave.LeaveId}">Nil</td>
 							<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Nil</td>
 							<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">Nil</td>
 							<td th:text="${leave.category}">Nil</td>
-							<td th:text="${leave.reason}">Nil</td>
-							<td th:text="${leave.contactDetails}">Nil</td>
 							<td th:text="${leave.status}">Nil</td>
-							<td th:text="${leave.comment}">Nil</td>
+							
 					</tr>
 			</table>
 		</tr>
@@ -57,3 +52,23 @@ table {
 
 </body>
 </html>
+
+<!-- unused fields
+
+
+
+<td>Reason</td>
+<td>Contact Details</td>
+<td>Status</td>
+<td>Comment</td>
+
+
+
+
+
+
+<td th:text="${leave.reason}">Nil</td>
+<td th:text="${leave.contactDetails}">Nil</td>
+<td th:text="${leave.comment}">Nil</td>
+
+-->
