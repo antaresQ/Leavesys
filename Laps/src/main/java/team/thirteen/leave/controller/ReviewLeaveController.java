@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import team.thirteen.leave.model.Employee;
 import team.thirteen.leave.model.Leavedetail;
 import team.thirteen.leave.repository.*;
+import team.thirteen.leave.service.EmployeeService;
+import team.thirteen.leave.service.LeaveService;
 
 @Controller
 public class ReviewLeaveController {
@@ -34,10 +36,15 @@ public class ReviewLeaveController {
 	}
 	
 	@RequestMapping(path="/reviewleave", params = "managerId" ,method = RequestMethod.GET)
-	@ResponseBody
 	public String ViewApplications(
 			@RequestParam("managerId") int managerId, Model model) {
-
+		
+//		EmployeeService emps = new EmployeeService();
+//		LeaveService les = new LeaveService();
+//		
+//		ArrayList<Employee> subordinates = emps.getSubordinates(managerId);
+//		ArrayList<Leavedetail> subLeave = les.getAllSubLeave(subordinates);
+			
 		List<Employee> allEmployees = empRepo.findAll();
 		ArrayList<Employee> subordinates = new ArrayList<Employee>();
 		List<Leavedetail> allLeave = lvRepo.findAll();
@@ -53,7 +60,6 @@ public class ReviewLeaveController {
 					if (l.getemployee() == e) {
 						subLeave.add(l);
 					}
-					
 				}
 			}
 		}

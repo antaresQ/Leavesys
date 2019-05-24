@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Leavedetail {
 	
 	@Id
-	private int LeaveId;
+	private int leaveId;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private String category;
@@ -30,7 +30,7 @@ public class Leavedetail {
 	public Leavedetail(int leaveId, LocalDateTime startDate, LocalDateTime endDate, String category, String reason,
 			Employee employee, String contactDetails) {
 		super();
-		LeaveId = leaveId;
+		this.leaveId = leaveId;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.category = category;
@@ -41,12 +41,22 @@ public class Leavedetail {
 	}
 
 	public int getLeaveId() {
-		return LeaveId;
+		return leaveId;
 	}
 
 	public void setLeaveId(int leaveId) {
-		LeaveId = leaveId;
+		this.leaveId = leaveId;
 	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 
 	public LocalDateTime getStartDate() {
 		return startDate;
