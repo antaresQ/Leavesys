@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import team.thirteen.leave.model.Employee;
 import team.thirteen.leave.model.Leavedetail;
+import team.thirteen.leave.model.Leaverecords;
 import team.thirteen.leave.model.Role;
 import team.thirteen.leave.repository.*;
 import team.thirteen.leave.service.EmployeeService;
@@ -96,9 +99,28 @@ public class ReviewLeaveController {
 		return "viewLeaveApplications";
 	}
 	
+	@RequestMapping(path="/submitreview", method = RequestMethod.POST)
+	public String SubmitReview(Leaverecords leaverecords,RedirectAttributes redirectA) {
+		
+		int val = leaverecords.getLeaveList().get(0).getemployee().getManagerId();		
+		redirectA.addAttribute("managerId", val);
+		return "redirect:/viewsubleave";
+	}
 	
+	
+	//Route test
 	@RequestMapping(path="/testpage", method = RequestMethod.GET)
 	public String test() {
 		return "viewLeaveApplications";
+	}
+	
+	
+	//Controller Redirect Test
+	@RequestMapping(path="/testred", method = RequestMethod.GET)
+	public String testred(RedirectAttributes redirectA) {
+		
+		int val = 1;
+		redirectA.addAttribute("managerId", val);
+		return "redirect:/viewsubleave";
 	}
 }

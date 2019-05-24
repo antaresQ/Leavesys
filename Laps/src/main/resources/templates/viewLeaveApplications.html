@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<form th:object="${Leavedetail}" th:action="@{/reviewleave}" method="post">
+<form th:object="${Leaverecords}" th:action="@{/submitreview}" method="post">
 	<table th:each="subordinate : ${subordinates}">
 		<tr>
 			<td>Staff ID</td>
