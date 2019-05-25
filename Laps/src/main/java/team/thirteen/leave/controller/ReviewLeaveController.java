@@ -1,6 +1,7 @@
 package team.thirteen.leave.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,6 +102,12 @@ public class ReviewLeaveController {
 	
 	@RequestMapping(path="/submitreview", method = RequestMethod.POST)
 	public String SubmitReview(Leaverecords leaverecords,RedirectAttributes redirectA) {
+		
+		Iterator<Leavedetail> iterL = leaverecords.getLeaveList().iterator();
+		
+		while (iterL.hasNext()) {
+			lvRepo.save(iterL.next());
+		}
 		
 		int val = leaverecords.getLeaveList().get(0).getemployee().getManagerId();		
 		redirectA.addAttribute("managerId", val);
