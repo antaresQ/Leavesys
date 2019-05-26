@@ -44,6 +44,8 @@ public class ReviewLeaveController {
 	public String ViewApplications(
 			@RequestParam("managerId") int managerId, Model model) {
 		
+		model.addAttribute("Leaverecords", new Leaverecords());
+		
 //		EmployeeService emps = new EmployeeService();
 //		LeaveService les = new LeaveService();
 //		
@@ -97,8 +99,9 @@ public class ReviewLeaveController {
 		model.addAttribute("subleave", subLeave);
 		
 		
-		return "viewLeaveApplications";
+		return "viewSubLeaveApplications";
 	}
+	
 	
 	@RequestMapping(path="/submitreview", method = RequestMethod.POST)
 	public String SubmitReview(Leaverecords leaverecords,RedirectAttributes redirectA) {

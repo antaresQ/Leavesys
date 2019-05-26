@@ -6,7 +6,8 @@
 <body>
 
 <form th:object="${Leaverecords}" th:action="@{/submitreview}" method="post">
-	<table th:each="subordinate : ${subordinates}">
+<div  th:each="subordinate : ${subordinates}">
+	<table>
 		<tr>
 			<td>Staff ID</td>
 			<td>Name</td>
@@ -27,25 +28,38 @@
 					<td>End Date</td>
 					<td>Category</td>
 					<td>Status</td>
+					<td>Review</td>
+			<!--	<td th:text="${itrStat.index}">test</td> -->
 				</tr>
-					<tr th:if="${subordinate.staffId} == ${leave.employee.staffId}" th:each="leave: ${subleave}">
-							<td th:text="${leave.LeaveId}">Nil</td>
-							<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Nil</td>
-							<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">Nil</td>
-							<td th:text="${leave.category}">Nil</td>
-							<td th:text="${leave.status}">Nil</td>
-							
+					<tr th:each="Leavedetail : ${subleave}" th:if="${subordinate.staffId} == ${Leavedetail.employee.staffId}">
+							<td th:text="${Leavedetail.LeaveId}"><input type="text" th:field="*{Leavedetail.LeaveId}" readonly="readonly"/><</td>
+							<td th:text="${#temporals.format(Leavedetail.startDate, 'dd-MM-yyyy')}">Nil</td>
+							<td th:text="${#temporals.format(Leavedetail.endDate, 'dd-MM-yyyy')}">Nil</td>
+							<td th:text="${Leavedetail.category}">Nil</td>
+							<td th:text="${Leavedetail.status}">
+							<input type:"text" th:field="*{name}">
+							</td>
+							<td th:if="${Leavedetail.status} == 'Applied/Updated'">
+							<input type="radio" th:name="${Leavedetail.status}" th:text="Approve" th:value="Approved"/><br>
+							<input type="radio" th:name="${Leavedetail.status}" th:text="Reject" th:value="Rejected"/><br>
+							</td>
 					</tr>
 			</table>
 		</tr>
-		<p> </p><p> </p><p> </p>
+		
 	</table>
-	
+	<br/><br/><br/>
+</div>
 	<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
 </form>
+
 <style>
 table {
   border-spacing: 25px 0px;
+}
+
+td {
+	padding: 1px;
 }
 </style>
 
