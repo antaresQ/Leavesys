@@ -3,6 +3,7 @@ package team.thirteen.leave.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -103,8 +104,126 @@ public class ReviewLeaveController {
 	}
 	
 	
+	
+	@RequestMapping(path="/viewIndiLeaveDetails", method = RequestMethod.GET)
+	public String LeaveDetails(int leaveId, Model model) {
+		
+		Leavedetail leave = lvRepo.findById(leaveId).get();
+		Employee subordinate = empRepo.findById(leave.getEmployee().getStaffId()).get();
+		
+		List<Leavedetail> allLeave = lvRepo.findAll();
+
+		int aConsumed = 0;
+		int mConsumed = 0;
+		
+		for (Leavedetail l: allLeave) {
+			if (subordinate.getStaffId() == l.getEmployee().getStaffId()) {
+				
+				if(l.getStatus().equals("Approved")) {
+					
+					if (l.getCategory().equals("Annual Leave")) {
+						aConsumed = aConsumed + 1;
+					}
+					else if(l.getCategory().equals("Medical Leave")) {
+						mConsumed = mConsumed +1;
+					}
+				
+					int annualL = subordinate.getRole().getAnnualLeave();
+					int medicalL = subordinate.getRole().getMedicalLeave();
+					annualL = annualL - aConsumed;
+					medicalL = medicalL - mConsumed;
+					
+					subordinate.getRole().setAnnualLeave(annualL);
+					subordinate.getRole().setMedicalLeave(medicalL);
+				}
+			}
+		}
+		
+		model.addAttribute("subordinate", subordinate);
+		model.addAttribute("leaveDetail", leave);
+		
+		return "individualLeaveDetails";
+	}
+	
+	
 	@RequestMapping(path="/submitreview", method = RequestMethod.POST)
-	public String SubmitReview(Leaverecords leaverecords,RedirectAttributes redirectA) {
+	public String SubmitReview(Leavedetail leavedetail,Model model,RedirectAttributes redirectA) {
+		
+		Employee subordinate = empRepo.findById(leavedetail.getEmployee().getStaffId()).get();
+		String message = new String();
+		
+		List<Leavedetail> allLeave = lvRepo.findAll();
+		int annualL = 0;
+		int medicalL = 0;
+		int aConsumed = 0;
+		int mConsumed = 0;
+		
+		for (Leavedetail l: allLeave) {
+			if (subordinate.getStaffId() == l.getEmployee().getStaffId()) {
+				
+				if(l.getStatus().equals("Approved")) {
+					
+					if (l.getCategory().equals("Annual Leave")) {
+						aConsumed = aConsumed + 1;
+					}
+					else if(l.getCategory().equals("Medical Leave")) {
+						mConsumed = mConsumed +1;
+					}
+				
+					annualL = subordinate.getRole().getAnnualLeave();
+					medicalL = subordinate.getRole().getMedicalLeave();
+					annualL = annualL - aConsumed;
+					medicalL = medicalL - mConsumed;
+					
+					subordinate.getRole().setAnnualLeave(annualL);
+					subordinate.getRole().setMedicalLeave(medicalL);
+				}
+			}
+		}
+		
+		if (leavedetail.getCategory() == "Annual Leave" && leavedetail.getStatus()=="Approved" && annualL > 0) {
+			lvRepo.save(leavedetail);
+			message = "Leave is Approved successfully";
+		}
+		
+		else if (leavedetail.getCategory() == "Medical Leave" && leavedetail.getStatus()=="Approved" && medicalL > 0) {
+			lvRepo.save(leavedetail);
+			message = "Leave is Approved successfully";
+		}
+		
+		else if (leavedetail.getStatus() == "Rejected") {
+			lvRepo.save(leavedetail);
+			message = "Leave is Rejected successfully";
+		}
+		
+		model.addAttribute("subordinate", subordinate);
+		model.addAttribute("leaveDetail", leavedetail);
+		model.addAttribute("message", message);
+		
+		
+		int val = leavedetail.getLeaveId();
+		redirectA.addAttribute("leaveId", val);
+		return "redirect:/viewIndiLeaveDetails";
+	}
+	
+	
+	@RequestMapping(path="/returnSubLeave", method = RequestMethod.POST)
+	public String ReturnSubLeave(Leavedetail leavedetail,RedirectAttributes redirectA) {
+
+		
+		int val = leavedetail.getemployee().getManagerId();		
+		redirectA.addAttribute("managerId", val);
+		return "redirect:/viewsubleave";
+	}
+	
+	
+//	int val = leavedetail.getemployee().getManagerId();		
+//	redirectA.addAttribute("managerId", val);
+//	return "redirect:/viewsubleave";
+	
+	//Deprecated
+	@RequestMapping(path="/submitBatchReview", method = RequestMethod.POST)
+	public String SubmitBatchReview(Leaverecords leaverecords,RedirectAttributes redirectA) {
 		
 		Iterator<Leavedetail> iterL = leaverecords.getLeaveList().iterator();
 		
@@ -116,6 +235,8 @@ public class ReviewLeaveController {
 		redirectA.addAttribute("managerId", val);
 		return "redirect:/viewsubleave";
 	}
+	
+	
 	
 	
 	//Route test

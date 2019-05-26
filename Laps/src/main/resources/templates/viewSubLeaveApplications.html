@@ -27,7 +27,7 @@
 					<td>End Date</td>
 					<td>Category</td>
 					<td>Status</td>
-					<td>Review</td>
+					<td>Details</td>
 			<!--	<td th:text="${itrStat.index}">test</td> -->
 				</tr>
 					<tr th:each="Leavedetail : ${subleave}" th:if="${subordinate.staffId} == ${Leavedetail.employee.staffId}">
@@ -35,20 +35,15 @@
 							<td th:text="${#temporals.format(Leavedetail.startDate, 'dd-MM-yyyy')}">Nil</td>
 							<td th:text="${#temporals.format(Leavedetail.endDate, 'dd-MM-yyyy')}">Nil</td>
 							<td th:text="${Leavedetail.category}">Nil</td>
-							<td th:text="${Leavedetail.status}">
-							<input type:"text" th:field="*{name}">
-							</td>
-							<td th:if="${Leavedetail.status} == 'Applied/Updated'">
-							<input type="radio" th:name="${Leavedetail.status}" th:text="Approve" th:value="Approved"/><br>
-							<input type="radio" th:name="${Leavedetail.status}" th:text="Reject" th:value="Rejected"/><br>
-							</td>
+							<td th:text="${Leavedetail.status}"></td>
+							<td><a th:href="@{/viewIndiLeaveDetails(leaveId=${Leavedetail.leaveId})}"> Click here</a></td>
 					</tr>
 			</table>
 		</tr>
-		
+		<br/><br/><br/>
 	</table>
-	<br/><br/><br/>
 </div>
+
 
 <style>
 table {
