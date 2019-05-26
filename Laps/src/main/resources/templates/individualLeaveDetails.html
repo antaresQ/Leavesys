@@ -19,7 +19,7 @@
 			<td th:text="${subordinate.role.medicalLeave}"></td>
 		</tr>
 		<tr>
-		<form th:object="${leavedetail}" th:action="@{/submitreview}" method="post"> 
+		<form th:object="${leaveDetail}" th:action="@{/submitreview}" method="post">
 		<table>
 			<tr>
 					<td>Leave ID</td>
@@ -34,11 +34,8 @@
 			<!--	<td th:text="${itrStat.index}">test</td> -->
 			</tr>
 					<tr>
-							<td th:text="${leaveDetail.LeaveId}">
-							<input type="text" th:value="${leavedetail.LeaveId}" th:field="*{leaveId}" readonly="readonly"/>
-							</td>
-							
-							<td th:text="${#temporals.format(leaveDetail.startDate, 'dd-MM-yyyy')}">Nil</td>
+							<td th:text="${leaveDetail.leaveId}"></td>
+							<td th:text="${#temporals.format(leaveDetail.startDate, 'dd-MM-yyyy')}"></td>
 							<td th:text="${#temporals.format(leaveDetail.endDate, 'dd-MM-yyyy')}">Nil</td>
 							<td th:text="${leaveDetail.category}">Nil</td>
 							<td th:text="${leaveDetail.reason}">Nil</td>
@@ -46,24 +43,36 @@
 							<td th:text="${leaveDetail.status}"></td>
 							
 							<td th:if="${leaveDetail.status} == 'Applied/Updated'">
-							<!-- <input type="radio" th:field="${leavedetail.status}" th:text="Approve" th:value="Approved" /><br>
-							<input type="radio" th:field="${leavedetail.status}" th:text="Reject" th:value="Rejected" /><br> -->
+							<input type="radio" th:field="*{status}" th:text="Approve" th:value="Approved" /><br>
+							<input type="radio" th:field="*{status}" th:text="Reject" th:value="Rejected" /><br>
 							</td>
 							
-							<td th:if="${leaveDetail.status} != 'Applied/Updated'">-</td>
-							<td th:text="${leaveDetail.comment}">
-							<input type="text" value="Please comment" th:field="*{leavedetail.comment}"/>
+							<td th:if="${leaveDetail.status} != 'Applied/Updated' AND ${leaveDetail.comment} != null" th:text="${leaveDetail.comment}" >-</td>
+							<td th:if="${leaveDetail.status} == 'Applied/Updated'">
+							<input type="text" th:field="*{comment}"/>
 							</td>
 					</tr>
 			</table>
+			<p>
+			<input type="hidden" th:field="*{leaveId}"/>
+			<input type="hidden" th:field="*{startDate}"/>
+			<input type="hidden" th:field="*{endDate}"/>
+			<input type="hidden" th:field="*{category}"/>
+			<input type="hidden" th:field="*{reason}"/>
+			<input type="hidden" th:field="*{contactDetails}"/>
+			<input type="hidden" th:field="*{employee}"/>
+			<p>
 			
 			<p th:if="${leaveDetail.status} == 'Applied/Updated'"><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
 			</form>
-			<input type="button" value="Return" onclick="history.back()"/>
+			
+			<input type="button" value="Return" th:href="@{url}"/>
 			
 		</tr>
 		
 	</table>
+	
+	<p th:if="${message} != null" th:text="${message}"></p>
 
 
 <style>

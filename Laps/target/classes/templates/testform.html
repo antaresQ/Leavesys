@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>view Roles </title>
+</head>
+<body>
+<form th:object="${leaveReturn}" th:action="@{/submitreview}" method="post">
+<input type="text" name="leaveId" th:field="*{leaveId}" />
+
+</form>
+</body>
+</html>

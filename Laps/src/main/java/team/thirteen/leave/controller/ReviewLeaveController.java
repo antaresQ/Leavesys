@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,14 +59,15 @@ public class ReviewLeaveController {
 		List<Leavedetail> allLeave = lvRepo.findAll();
 		ArrayList<Leavedetail> subLeave = new ArrayList<>();
 		
+		int annualL = 0;
+		int medicalL = 0;
+		int aConsumed = 0;
+		int mConsumed = 0;
 
 		for (Employee e: allEmployees) {
 			
 			if (e.getManagerId() == managerId) {
-				
-				int aConsumed = 0;
-				int mConsumed = 0;
-				
+
 				for (Leavedetail l: allLeave) {
 					
 						if (l.getemployee() == e) {
@@ -74,10 +76,10 @@ public class ReviewLeaveController {
 							if(l.getStatus().equals("Approved")) {
 								
 								if (l.getCategory().equals("Annual Leave")) {
-									aConsumed = aConsumed + 1;
+									aConsumed++;
 								}
 								else if(l.getCategory().equals("Medical Leave")) {
-									mConsumed = mConsumed +1;
+									mConsumed++;
 								}
 								
 							}
@@ -85,8 +87,8 @@ public class ReviewLeaveController {
 						}
 					}
 				
-				int annualL = e.getRole().getAnnualLeave();
-				int medicalL = e.getRole().getMedicalLeave();
+				annualL = e.getRole().getAnnualLeave();
+				medicalL = e.getRole().getMedicalLeave();
 				annualL = annualL - aConsumed;
 				medicalL = medicalL - mConsumed;
 				
@@ -99,65 +101,26 @@ public class ReviewLeaveController {
 		model.addAttribute("subordinates", subordinates);
 		model.addAttribute("subleave", subLeave);
 		
-		
 		return "viewSubLeaveApplications";
 	}
 	
 	
 	
 	@RequestMapping(path="/viewIndiLeaveDetails", method = RequestMethod.GET)
-	public String LeaveDetails(int leaveId, Model model) {
+	public String LeaveDetails(int leaveId, Model model, String message) {
+		
+		String msg = message;
 		
 		Leavedetail leave = lvRepo.findById(leaveId).get();
 		Employee subordinate = empRepo.findById(leave.getEmployee().getStaffId()).get();
 		
 		List<Leavedetail> allLeave = lvRepo.findAll();
 
-		int aConsumed = 0;
-		int mConsumed = 0;
-		
-		for (Leavedetail l: allLeave) {
-			if (subordinate.getStaffId() == l.getEmployee().getStaffId()) {
-				
-				if(l.getStatus().equals("Approved")) {
-					
-					if (l.getCategory().equals("Annual Leave")) {
-						aConsumed = aConsumed + 1;
-					}
-					else if(l.getCategory().equals("Medical Leave")) {
-						mConsumed = mConsumed +1;
-					}
-				
-					int annualL = subordinate.getRole().getAnnualLeave();
-					int medicalL = subordinate.getRole().getMedicalLeave();
-					annualL = annualL - aConsumed;
-					medicalL = medicalL - mConsumed;
-					
-					subordinate.getRole().setAnnualLeave(annualL);
-					subordinate.getRole().setMedicalLeave(medicalL);
-				}
-			}
-		}
-		
-		model.addAttribute("subordinate", subordinate);
-		model.addAttribute("leaveDetail", leave);
-		
-		return "individualLeaveDetails";
-	}
-	
-	
-	@RequestMapping(path="/submitreview", method = RequestMethod.POST)
-	public String SubmitReview(Leavedetail leavedetail,Model model,RedirectAttributes redirectA) {
-		
-		Employee subordinate = empRepo.findById(leavedetail.getEmployee().getStaffId()).get();
-		String message = new String();
-		
-		List<Leavedetail> allLeave = lvRepo.findAll();
 		int annualL = 0;
 		int medicalL = 0;
 		int aConsumed = 0;
 		int mConsumed = 0;
-		
+
 		for (Leavedetail l: allLeave) {
 			if (subordinate.getStaffId() == l.getEmployee().getStaffId()) {
 				
@@ -181,45 +144,100 @@ public class ReviewLeaveController {
 			}
 		}
 		
-		if (leavedetail.getCategory() == "Annual Leave" && leavedetail.getStatus()=="Approved" && annualL > 0) {
-			lvRepo.save(leavedetail);
-			message = "Leave is Approved successfully";
-		}
-		
-		else if (leavedetail.getCategory() == "Medical Leave" && leavedetail.getStatus()=="Approved" && medicalL > 0) {
-			lvRepo.save(leavedetail);
-			message = "Leave is Approved successfully";
-		}
-		
-		else if (leavedetail.getStatus() == "Rejected") {
-			lvRepo.save(leavedetail);
-			message = "Leave is Rejected successfully";
-		}
 		
 		model.addAttribute("subordinate", subordinate);
-		model.addAttribute("leaveDetail", leavedetail);
-		model.addAttribute("message", message);
+		model.addAttribute("leaveDetail", leave);
+		model.addAttribute("message", msg);
 		
-		
-		int val = leavedetail.getLeaveId();
-		redirectA.addAttribute("leaveId", val);
-		return "redirect:/viewIndiLeaveDetails";
+		return "individualLeaveDetails";
 	}
 	
+	@RequestMapping(path="/submitreview", method = RequestMethod.POST)
+	public String SubmitReview(Leavedetail leaveDetail,Model model,RedirectAttributes redirectA) {
+		
+		Employee subordinate = empRepo.findById(leaveDetail.getEmployee().getStaffId()).get();
+		String message = new String();
+		
+		List<Leavedetail> allLeave = lvRepo.findAll();
+
+		int annualL = 0;
+		int medicalL = 0;
+		int aConsumed = 0;
+		int mConsumed = 0;
+
+		for (Leavedetail l: allLeave) {
+			if (subordinate.getStaffId() == l.getEmployee().getStaffId()) {
+				
+				if(l.getStatus().equals("Approved")) {
+					
+					if (l.getCategory().equals("Annual Leave")) {
+						aConsumed = aConsumed + 1;
+					}
+					else if(l.getCategory().equals("Medical Leave")) {
+						mConsumed = mConsumed +1;
+					}
+				
+					annualL = subordinate.getRole().getAnnualLeave();
+					medicalL = subordinate.getRole().getMedicalLeave();
+					annualL = annualL - aConsumed;
+					medicalL = medicalL - mConsumed;
+					
+				}
+			}
+		}
+		
+		
+		if (leaveDetail.getStatus() == null) {
+			leaveDetail.setStatus("Applied/Updated");
+			message = "Invalid Submission. Please Select an Option.";
+		}
+		
+		else if (leaveDetail.getCategory().equals("Annual Leave")  && leaveDetail.getStatus().equals("Approved") && annualL > 0) {
+			annualL--;
+			lvRepo.save(leaveDetail);
+			message = "Leave is Approved successfully";
+		}
+		
+		else if (leaveDetail.getCategory().equals("Medical Leave") && leaveDetail.getStatus().equals("Approved") && medicalL > 0) {
+			medicalL--;
+			lvRepo.save(leaveDetail);
+			message = "Leave is Approved successfully";
+		}
+		
+		else if (leaveDetail.getStatus().equals("Rejected") && leaveDetail.getComment().isEmpty()) {
+			leaveDetail.setStatus("Applied/Updated");
+			message = "Comment required for Rejection";
+		}
+		
+		else if (leaveDetail.getStatus().equals("Rejected")) {
+			lvRepo.save(leaveDetail);
+			message = "Leave is Rejected. Comment:" + leaveDetail.getComment();
+		}
+		
+		subordinate.getRole().setAnnualLeave(annualL);
+		subordinate.getRole().setMedicalLeave(medicalL);
+		
+		String url = "/viewsubleave?managerId=" + subordinate.getManagerId();
+		
+		model.addAttribute("subordinate", subordinate);
+		model.addAttribute("leaveDetail", leaveDetail);
+		model.addAttribute("message", message);
+		model.addAttribute("url",url);
+		
+		
+		int val = leaveDetail.getLeaveId();
+		model.addAttribute("leaveId", val);
+		return "individualLeaveDetails";
+	}
 	
 	@RequestMapping(path="/returnSubLeave", method = RequestMethod.POST)
 	public String ReturnSubLeave(Leavedetail leavedetail,RedirectAttributes redirectA) {
 
-		
 		int val = leavedetail.getemployee().getManagerId();		
 		redirectA.addAttribute("managerId", val);
 		return "redirect:/viewsubleave";
 	}
-	
-	
-//	int val = leavedetail.getemployee().getManagerId();		
-//	redirectA.addAttribute("managerId", val);
-//	return "redirect:/viewsubleave";
+
 	
 	//Deprecated
 	@RequestMapping(path="/submitBatchReview", method = RequestMethod.POST)
@@ -254,4 +272,14 @@ public class ReviewLeaveController {
 		redirectA.addAttribute("managerId", val);
 		return "redirect:/viewsubleave";
 	}
+	
+	@RequestMapping(path="/testform", method = RequestMethod.GET)
+	public String TestForm(Model model) {
+		
+		Leavedetail leaveObject = new Leavedetail();
+		model.addAttribute(leaveObject);
+		
+		return "testform";
+	}
+	
 }
