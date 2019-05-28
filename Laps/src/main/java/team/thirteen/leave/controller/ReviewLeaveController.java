@@ -47,12 +47,6 @@ public class ReviewLeaveController {
 			@RequestParam("managerId") int managerId, Model model) {
 		
 		model.addAttribute("Leaverecords", new Leaverecords());
-		
-//		EmployeeService emps = new EmployeeService();
-//		LeaveService les = new LeaveService();
-//		
-//		ArrayList<Employee> subordinates = emps.getSubordinates(managerId);
-//		ArrayList<Leavedetail> subLeave = les.getAllSubLeave(subordinates);
 			
 		List<Employee> allEmployees = empRepo.findAll();
 		ArrayList<Employee> subordinates = new ArrayList<Employee>();
@@ -230,6 +224,7 @@ public class ReviewLeaveController {
 		return "individualLeaveDetails";
 	}
 	
+	//return to subleave page
 	@RequestMapping(path="/returnSubLeave", method = RequestMethod.POST)
 	public String ReturnSubLeave(Leavedetail leavedetail,RedirectAttributes redirectA) {
 
